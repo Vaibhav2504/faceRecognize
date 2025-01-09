@@ -78,14 +78,14 @@ try:
             cursor.execute(
                 """
                 INSERT INTO Students (id, name, major, starting_year, total_attendance, year, last_attendance_time)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, NOW())
                 ON DUPLICATE KEY UPDATE
                     name = VALUES(name),
                     major = VALUES(major),
                     starting_year = VALUES(starting_year),
                     total_attendance = VALUES(total_attendance),
                     year = VALUES(year),
-                    last_attendance_time = VALUES(last_attendance_time)
+                    last_attendance_time = NOW()
                 """,
                 (
                     key,
@@ -94,10 +94,8 @@ try:
                     value["starting_year"],
                     value["total_attendance"],
                     value["year"],
-                    value["last_attendance_time"],
                 ),
             )
-
         # Commit the changes
         connection.commit()
         print("Data inserted successfully")
