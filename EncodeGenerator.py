@@ -20,6 +20,7 @@ print(pathList)
 imgList = []
 studentIds = []
 
+# Opens the files
 for path in pathList:
     img = cv2.imread(os.path.join(folderPath, path))
     if img is not None:

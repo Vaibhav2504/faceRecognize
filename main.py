@@ -20,6 +20,24 @@ db_config = {
     'database': 'newdata',
 }
 
+from datetime import datetime
+
+def mark_attendance(student_id):
+    try:
+        with connect(**db_config) as connection:
+            cursor = connection.cursor()
+            cursor.execute("""
+                UPDATE Students
+                SET total_attendance = total_attendance + 1,
+                    last_attendance_time = NOW()
+                WHERE id = %s
+            """, (student_id,))
+            connection.commit()
+            print(f"Attendance marked for ID: {student_id}")
+    except Error as e:
+        print(f"Error updating attendance: {e}")
+
+
 # Constants
 EAR_THRESHOLD = 0.26  # Lowered for more sensitivity
 CONSEC_FRAMES = 1  # Reduced for faster detection
@@ -159,6 +177,7 @@ def main():
                 if student:
                     cv2.putText(frame, f"{student['name']} ({student['id']})", (50, 50),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    mark_attendance(student['id'])
                     consecutive_blinks = 0
                     process_live_face = False
                 else:
